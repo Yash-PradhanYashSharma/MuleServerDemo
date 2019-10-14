@@ -1,5 +1,6 @@
 package com.pdf;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 
@@ -27,9 +28,13 @@ public class FirstPdf {
 	private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
 	private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
-	public void generatePDF() {
+	public FirstPdf() {
+	}
+
+	public static void generatePdf() {
 		try {
 			Document document = new Document();
+	        File file = new File(FILE);
 			PdfWriter.getInstance(document, new FileOutputStream(FILE));
 			document.open();
 			addMetaData(document);

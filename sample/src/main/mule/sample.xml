@@ -1,40 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:file="http://www.mulesoft.org/schema/mule/file"
-	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
 http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2fccef67-421d-4efc-a3a9-a48849fb474d" >
-		<http:listener-connection host="0.0.0.0" port="8085" />
+	<http:listener-config name="HTTP_Listener_config"
+		doc:name="HTTP Listener config" doc:id="2fccef67-421d-4efc-a3a9-a48849fb474d">
+		<http:listener-connection host="0.0.0.0"
+			port="8085" />
 	</http:listener-config>
-	<file:config name="File_Config" doc:name="File Config" doc:id="594ecf78-1d01-4b32-92d4-0089a95391eb" >
+	<file:config name="File_Config" doc:name="File Config"
+		doc:id="594ecf78-1d01-4b32-92d4-0089a95391eb">
 		<file:connection />
 	</file:config>
-	<flow name="sampleFlow" doc:id="b2a5d151-30aa-43c4-92a3-242fe612557d" >
-		<http:listener doc:name="Listener" doc:id="c3cc245c-930d-4b84-8de1-eda649d365c0" config-ref="HTTP_Listener_config" path="test"/>
-		<ee:transform doc:name="Transform Message" doc:id="3fabbcbb-f963-454a-9dfb-cecea163e15b" >
-			<ee:message >
-			</ee:message>
-			<ee:variables >
-				<ee:set-variable variableName="stringPayload" ><![CDATA[%dw 2.0
-output application/java
-var stringObj= write(payload ,"application/json")
----
-"OrderDetails:  \n\n" ++ trim ((((stringObj replace "{" with "") replace "}" with "") replace "[" with "") replace "]" with "")]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<java:new constructor="JsonToPDF()" doc:name="New" doc:id="8e558fb6-140c-472d-8e40-e841d7205011" class="com.pdf.JsonToPDF" target="JsonToPdf"/>
-		<java:invoke doc:name="Invoke" doc:id="a3e4ba42-7f69-4b3a-b5ed-f593b6a4f31f" instance="#[vars.JsonToPdf]" class="com.pdf.JsonToPDF" method="jsontopdf(String , String)">
-			<java:args ><![CDATA[#[{
-        filename: "C:\\test\\test.pdf",
-        content: vars.stringPayload
-      }]]]></java:args>
-		</java:invoke>
-		<file:write doc:name="Write" doc:id="02a13b76-560f-455d-8a2c-a2650578b546" path="C:/temp/FirstPdf.pdf"/>
+	<flow name="sampleFlow" doc:id="b2a5d151-30aa-43c4-92a3-242fe612557d">
+		<http:listener doc:name="Listener"
+			doc:id="c3cc245c-930d-4b84-8de1-eda649d365c0" config-ref="HTTP_Listener_config"
+			path="test" />
+		<java:invoke-static doc:name="Invoke static" doc:id="abc293be-9f0b-43ff-818d-cd1e1796efdf" class="com.pdf.FirstPdf" method="generatePdf()"/>
+		<file:read doc:name="Read" doc:id="f1bc28d6-06c5-433d-8d91-a3b330d3c0d5" config-ref="File_Config" path="c:/temp/FirstPdf.pdf"/>
 		<logger level="INFO" doc:name="Logger" doc:id="5e883c28-6c16-47e4-bc26-9feea748dd81" message="#[payload]"/>
 	</flow>
 </mule>

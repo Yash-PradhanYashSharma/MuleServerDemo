@@ -2,7 +2,7 @@ sap:
   host: "api.stripe.com"
   port: "443"
   path: "v1/invoices"
-  auth: "Bearer sk_test_69bOEpfWbnXmJ8CrpbtYkDVT00xCLw9HGT"
+  auth: "Bearer sk_test_q69XflYx3m3impJkpy9JbCR100QOzTTAn3"
   timeout:  "60000"
   
 mysql:
